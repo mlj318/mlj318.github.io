@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>PNG图片带alpha通道-解码 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="PNG图片带alpha通道-解码ocr文字识别的服务中，可能会收到带alpha通道的图片，直接使用opencv解码出来的背景是纯黑色的，导致图片反色，无法识别文字。 还有excel表格粘贴生成的图片也是带alpha的png，在深色模式(比如微信的深色模式)下都看不清。 使用exiftool可以查看图片的详细信息 123456789101112131415161718192021$ exiftool">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PNG图片带alpha通道-解码">
+<meta property="og:url" content="http://example.com/2021/05/16/other/png_with_alpha/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="PNG图片带alpha通道-解码ocr文字识别的服务中，可能会收到带alpha通道的图片，直接使用opencv解码出来的背景是纯黑色的，导致图片反色，无法识别文字。 还有excel表格粘贴生成的图片也是带alpha的png，在深色模式(比如微信的深色模式)下都看不清。 使用exiftool可以查看图片的详细信息 123456789101112131415161718192021$ exiftool">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png">
+<meta property="article:published_time" content="2021-05-16T03:27:48.000Z">
+<meta property="article:modified_time" content="2021-07-16T03:29:01.404Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="opencv">
+<meta property="article:tag" content="png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-other/png_with_alpha" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/05/16/other/png_with_alpha/" class="article-date">
+  <time class="dt-published" datetime="2021-05-16T03:27:48.000Z" itemprop="datePublished">2021-05-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/other/">other</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      PNG图片带alpha通道-解码
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="PNG图片带alpha通道-解码"><a href="#PNG图片带alpha通道-解码" class="headerlink" title="PNG图片带alpha通道-解码"></a>PNG图片带alpha通道-解码</h1><p>ocr文字识别的服务中，可能会收到带alpha通道的图片，直接使用opencv解码出来的背景是纯黑色的，导致图片反色，无法识别文字。</p>
+<p>还有excel表格粘贴生成的图片也是带alpha的png，在深色模式(比如微信的深色模式)下都看不清。</p>
+<p>使用exiftool可以查看图片的详细信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$ exiftool /Users/Downloads/PNG_transparency_demonstration_1.png</span><br><span class="line">ExifTool Version Number         : 12.00</span><br><span class="line">File Name                       : PNG_transparency_demonstration_1.png</span><br><span class="line">Directory                       : /Users/Downloads</span><br><span class="line">File Size                       : 222 kB</span><br><span class="line">File Modification Date/Time     : 2021:07:15 17:56:24+08:00</span><br><span class="line">File Access Date/Time           : 2021:07:15 17:56:38+08:00</span><br><span class="line">File Inode Change Date/Time     : 2021:07:15 17:56:36+08:00</span><br><span class="line">File Permissions                : rw-r--r--</span><br><span class="line">File Type                       : PNG</span><br><span class="line">File Type Extension             : png</span><br><span class="line">MIME Type                       : image/png</span><br><span class="line">Image Width                     : 800</span><br><span class="line">Image Height                    : 600</span><br><span class="line">Bit Depth                       : 8</span><br><span class="line">Color Type                      : RGB with Alpha</span><br><span class="line">Compression                     : Deflate/Inflate</span><br><span class="line">Filter                          : Adaptive</span><br><span class="line">Interlace                       : Noninterlaced</span><br><span class="line">Image Size                      : 800x600</span><br><span class="line">Megapixels                      : 0.480</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png" alt="带alpha通道的png图片"></p>
+<p>对于上面带alpha通道的png图片，在白色背景下背景显示白色。将chrome设置成深色背景模式，浏览器输入<code>chrome://flags/#enable-force-dark</code>，可以看到图片显示的背景就是黑色的了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>img=cv2.imread(<span class="string">&#x27;/Users/Downloads/PNG_transparency_demonstration_1.png&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>img[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line">array([<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>], dtype=uint8) <span class="comment">#正常背景部分的BGR值都是0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>img[<span class="number">400</span>][<span class="number">400</span>]</span><br><span class="line">array([ <span class="number">80</span>,  <span class="number">67</span>, <span class="number">183</span>], dtype=uint8) </span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>img_a=cv2.imread(<span class="string">&#x27;/Users/Downloads/PNG_transparency_demonstration_1.png&#x27;</span>, cv2.IMREAD_UNCHANGED)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>img_a[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line">array([<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>], dtype=uint8)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>img_a[<span class="number">400</span>][<span class="number">400</span>]</span><br><span class="line">array([ <span class="number">80</span>,  <span class="number">67</span>, <span class="number">183</span>, <span class="number">255</span>], dtype=uint8)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>有alpha通道的图片，只有在显示的时候才知道背景的颜色。大部分情况下背景部分的BGR值都是0，如果直接使用opencv,PIL等解码工具，默认会忽略aplha通道，导致背景变成纯黑色，图片显示成黑白反色。</p>
+<p>正确的解码方式如下，使用纯白的背景色融合：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">CvDecode2BGR</span>(<span class="params">img_path,check_alpha=<span class="literal">False</span></span>):</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> check_alpha:</span><br><span class="line">        cv_img = cv2.imread(img_path, cv2.IMREAD_COLOR)</span><br><span class="line">        <span class="keyword">return</span> cv_img</span><br><span class="line">    cv_img = cv2.imread(img_path, cv2.IMREAD_UNCHANGED)</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(cv_img.shape) == <span class="number">2</span>:</span><br><span class="line">        cv_img = cv2.cvtColor(cv_img,cv2.COLOR_GRAY2BGR)</span><br><span class="line">    <span class="keyword">elif</span> <span class="built_in">len</span>(cv_img.shape) == <span class="number">3</span> <span class="keyword">and</span> cv_img.shape[-<span class="number">1</span>] == <span class="number">4</span>:</span><br><span class="line">        alpha = cv_img[:,:,<span class="number">3</span>:<span class="number">4</span>]/<span class="number">255</span></span><br><span class="line">        cv_img = <span class="number">255</span>*(<span class="number">1.0</span> - alpha) + alpha * cv_img[:,:,:-<span class="number">1</span>] </span><br><span class="line">        cv_img = cv_img.astype(np.uint8)</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> cv_img</span><br></pre></td></tr></table></figure>
+
+
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Portable_Network_Graphics">Portable Network Graphics</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/05/16/other/png_with_alpha/" data-id="ckr5s89gk00002qsr1eg00x7q" data-title="PNG图片带alpha通道-解码" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/opencv/" rel="tag">opencv</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/png/" rel="tag">png</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/06/16/other/webp/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          webp格式
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/06/16/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/jpg/" rel="tag">jpg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/opencv/" rel="tag">opencv</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/png/" rel="tag">png</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webp/" rel="tag">webp</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/jpg/" style="font-size: 10px;">jpg</a> <a href="/tags/opencv/" style="font-size: 10px;">opencv</a> <a href="/tags/png/" style="font-size: 10px;">png</a> <a href="/tags/webp/" style="font-size: 10px;">webp</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/06/16/other/webp/">webp格式</a>
+          </li>
+        
+          <li>
+            <a href="/2021/05/16/other/png_with_alpha/">PNG图片带alpha通道-解码</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
